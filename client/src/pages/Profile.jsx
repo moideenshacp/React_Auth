@@ -46,16 +46,17 @@ const Profile = () => {
       <h1 className="text-3xl font-semibold text-center my-7 uppercase">Profile</h1>
       <form className="flex flex-col gap-4">
         <input type="file" ref={fileRef} hidden accept="image/*" onChange={(e)=>setImage(e.target.files[0])} />
-    <img  className="h-28 w-28 cursor-pointer self-center rounded-full object-cover" src={currentUser.profilePicture} alt="profile" onClick={()=>fileRef.current.click()} />
+    <img  className="h-28 w-28 cursor-pointer self-center rounded-full object-cover" src={formData.profilePicture || currentUser.profilePicture} alt="profile" onClick={()=>fileRef.current.click()} />
     <p className="text-sm self-center">
-      {imgErr ? (
-        <span className="text-red-700">Error on uploding image</span>
-      ):imgPercent > 0 && imgPercent < 100 ?(
-        <span className="text-slate-700">{`'Uploading:${imgPercent} '%'`}</span>
-      ):imgPercent === 100 ?(
-        <span className="text-green-700">Image uploaded successfully!!</span>
-      ):''}
-    </p>
+  {imgErr ? (
+    <span className="text-red-700">Error on uploading image</span>
+  ) : imgPercent > 0 && imgPercent < 100 ? (
+    <span className="text-slate-700">{`Uploading: ${imgPercent}%`}</span>
+  ) : imgPercent === 100 ? (
+    <span className="text-green-700">Image uploaded successfully!!</span>
+  ) : null}
+</p>
+
     <input defaultValue={currentUser.username} className="bg-slate-100 p-3 rounded-lg" type="text" placeholder="Username" id="username" />
     <input defaultValue={currentUser.email} className="bg-slate-100 p-3 rounded-lg" type="email" placeholder="Email" id="email" />
     <input  className="bg-slate-100 p-3 rounded-lg" type="password" placeholder="Password" id="password" />
