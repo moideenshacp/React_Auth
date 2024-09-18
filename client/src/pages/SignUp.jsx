@@ -34,7 +34,9 @@ const SignUp = () => {
         setError(true)
         return
       }
-      navigate('/sign-in')
+      navigate('/sign-in',{
+        state:{message:"User added successfully,please login now!!.."}
+      })
     } catch (error) {
       setLoading(false)
       setError(true)

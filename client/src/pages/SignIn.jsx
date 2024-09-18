@@ -1,11 +1,14 @@
-import { useState } from "react"
-import { Link,useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { Link,useNavigate,useLocation } from "react-router-dom"
 import { signInStart,signInSuccess,signInFailure } from "../redux/user/userSlice"
 import { useDispatch, useSelector } from "react-redux"
 import OAuth from "../components/OAuth"
 import { Navigate } from "react-router-dom"
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignIn = () => {
+  const location = useLocation()
   const [formData,setFormData] = useState({})
   const {loading,error} = useSelector((state)=>state.user)
   const navigate = useNavigate()
@@ -41,6 +44,12 @@ const SignIn = () => {
     
   }
 
+  useEffect(() => {
+    if (location.state?.message) {
+      toast.success(location.state.message); 
+    }
+  }, [location.state]);
+
   const {currentUser} = useSelector((state)=>state.user)
   
   if (currentUser) {
@@ -49,6 +58,7 @@ const SignIn = () => {
   
   return (
     <div className="p-4 max-w-lg mx-auto">
+      <ToastContainer />
     <h1 className="text-3xl text-center font-semibold my-7 uppercase">Sign in</h1>
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <input type="email" placeholder="Email" id="email" className="bg-slate-100 p-3 rounded-lg" onChange={handleChange} />

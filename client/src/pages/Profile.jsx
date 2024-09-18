@@ -4,6 +4,9 @@ import {getDownloadURL, getStorage,ref,uploadBytesResumable} from "firebase/stor
 import { app } from "../firebase"
 import { useDispatch } from "react-redux"
 import { updateStart,updateSuccess,updateFailure,deleteStart,deleteFailure,deleteSuccess,signout } from "../redux/user/userSlice"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Profile = () => {
   const {currentUser,loading,error} = useSelector((state)=>state.user)
@@ -13,7 +16,6 @@ const Profile = () => {
   const [imgErr,setImgErr] = useState(false)
   const [formData,setFormData] = useState({})
   const dispatch = useDispatch()
-  const [updateSuccessmsg,setUpdateSuccessmsg] = useState(false)
   
   
   useEffect(()=>{
@@ -65,13 +67,15 @@ const Profile = () => {
       const data = await res.json()
       if(data.success=== false){
         dispatch(updateFailure(data))
+        toast.error('Update failed. Please try again.')
         return
       }
       dispatch(updateSuccess(data))
-      setUpdateSuccessmsg(true)
+      toast.success('User updated successfully')
       
     } catch (error) {
       dispatch(updateFailure(error))
+      toast.error('Update failed. Please try again.')
     }
   }
 
@@ -85,12 +89,15 @@ const Profile = () => {
       const data = await res.json()
       if(data.success==false){
       dispatch(deleteFailure(data))
+      toast.error('Account deletion failed.')
         return
       }
       dispatch(deleteSuccess(data))
+      toast.success('Account deleted successfully.')
       
     } catch (error) {
       dispatch(deleteFailure(error))
+      toast.error('Account deletion failed.')
       
     }
   }
@@ -98,9 +105,11 @@ const Profile = () => {
     try {
       await fetch('api/auth/signout')
       dispatch(signout())
+      toast.success('Signed out successfully.')
       
     } catch (error) {
-      console.log(error);
+      console.log(error)
+      toast.error('Sign out failed.')
       
     }
   }
@@ -131,7 +140,7 @@ const Profile = () => {
         <span onClick={handleSignOut} className="text-red-700 cursor-pointer">Sign Out</span>
       </div>
       <p className="text-red-700 mt-5">{error && 'Something went wrong!!'}</p>
-      <p className="text-green-700 mt-5">{updateSuccessmsg && 'User updated successfully'}</p>
+      <ToastContainer />
     </div>
   )
 }
