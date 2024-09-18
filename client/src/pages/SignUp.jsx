@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { Link,useNavigate } from "react-router-dom"
 import OAuth from "../components/OAuth"
+import { useSelector } from "react-redux"
+import { Navigate } from "react-router-dom"
 
 const SignUp = () => {
   const [formData,setFormData] = useState({})
@@ -40,6 +42,10 @@ const SignUp = () => {
       
     }
     
+  }
+  const {currentUser} = useSelector((state)=>state.user)
+  if (currentUser) {
+    return <Navigate to="/" replace />;
   }
   
   return (

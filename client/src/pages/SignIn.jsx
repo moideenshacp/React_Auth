@@ -3,6 +3,7 @@ import { Link,useNavigate } from "react-router-dom"
 import { signInStart,signInSuccess,signInFailure } from "../redux/user/userSlice"
 import { useDispatch, useSelector } from "react-redux"
 import OAuth from "../components/OAuth"
+import { Navigate } from "react-router-dom"
 
 const SignIn = () => {
   const [formData,setFormData] = useState({})
@@ -38,6 +39,12 @@ const SignIn = () => {
       
     }
     
+  }
+
+  const {currentUser} = useSelector((state)=>state.user)
+  
+  if (currentUser) {
+    return <Navigate to="/" replace />;
   }
   
   return (
