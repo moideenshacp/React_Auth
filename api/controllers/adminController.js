@@ -39,9 +39,24 @@ export const getAllUsers = async (req,res,next)=>{
 export const updateUser = async(req,res,next)=>{
     try {
         const {id} = req.params;
-        const{email,username}=req.body
+        const{email,username,profilePicture}=req.body
 
-        const updatedUser = await User.findByIdAndUpdate(id,{username,email},{new:true})
+        if (!username || !email) {
+            return next(errorHandler(400, "All fields are required"));
+          }
+          if (
+            username.trim().length === 0 ||
+            email.trim().length === 0 
+          ) {
+            return next(errorHandler(400, "Fields cannot contain only spaces."));
+          }
+        
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            return next(errorHandler(400, "Invalid email format."));
+          }
+
+        const updatedUser = await User.findByIdAndUpdate(id,{username,email,profilePicture},{new:true})
         if(!updateUser){
             return next(errorHandler(404,"user not found"))
         }
@@ -67,6 +82,21 @@ export const addUser =async (req,res,next)=>{
     const {username,email,password} = req.body;
     const hashedPassword = bcryptjs.hashSync(password,10)
     const newUser = new User({username,email,password:hashedPassword})
+    if (!username || !email || !password) {
+        return next(errorHandler(400, "All fields are required"));
+      }
+      if (
+        username.trim().length === 0 ||
+        email.trim().length === 0 ||
+        password.trim().length === 0
+      ) {
+        return next(errorHandler(400, "Fields cannot contain only spaces."));
+      }
+    
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return next(errorHandler(400, "Invalid email format."));
+      }
     try {
         await newUser.save()
         res.status(201).json({message:'user added successfully'})

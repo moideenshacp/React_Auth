@@ -36,7 +36,7 @@ const Profile = () => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setImgPercent(Math.round(progress));
       },
-      (error) => {
+      () => {
         setImgErr(true);
       },
       () => {
@@ -71,7 +71,7 @@ const Profile = () => {
         return
       }
       dispatch(updateSuccess(data))
-      toast.success('User updated successfully')
+      toast.success('Profile updated successfully')
       
     } catch (error) {
       dispatch(updateFailure(error))

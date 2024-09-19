@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux"
 import { signInStart,signInSuccess,signInFailure } from "../redux/user/userSlice"
 import { useSelector } from "react-redux"
 import { Navigate } from "react-router-dom"
+import { toast, ToastContainer } from "react-toastify"
 
 const AdminSignIn = () => {
 
@@ -11,7 +12,8 @@ const AdminSignIn = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
+  const {currentUser,error} = useSelector((state)=>state.user)
+  
 
   const handleSubmit =async (e)=>{
     e.preventDefault()
@@ -27,6 +29,7 @@ const AdminSignIn = () => {
     const data = await res.json()
     if(data.success === false){
       dispatch(signInFailure(data))
+      toast.error(error.message)
       return
     }
     dispatch(signInSuccess(data))
@@ -40,8 +43,6 @@ const AdminSignIn = () => {
 
   }
 
-  const {currentUser} = useSelector((state)=>state.user)
-  console.log(currentUser ? currentUser.isAdmin : currentUser,"123333333");
   
   if (currentUser) {
     return <Navigate to="/admin/home" replace />;
@@ -49,6 +50,8 @@ const AdminSignIn = () => {
   return (
     <div className=" items-center justify-center mt-28">
     <div className="p-4 max-w-lg mx-auto">
+    <ToastContainer />
+
     <h1 className="text-3xl text-center font-semibold my-7 uppercase">Sign in</h1>
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <input onChange={(e)=>setEmail(e.target.value)} type="email" placeholder="Email" id="email" className="bg-slate-100 p-3 rounded-lg" />

@@ -5,10 +5,10 @@ import Profile from "./pages/Profile";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Header from "./components/Header";
-import { PrivateRoute, HomePrivateRoute, AdminHomePrivateRoute } from "./components/privateRoute";
 import AdminSignIn from "./pages/AdminSignIn";
 import AdminHome from "./pages/AdminHome";
 import AdminDashboard from "./pages/AdminDashboard";
+import { AdminHomePrivateRoute, HomePrivateRoute, PrivateRoute } from "./components/PrivateRoute";
 
 const AppContent = () => {
   const location = useLocation();
@@ -31,8 +31,8 @@ const AppContent = () => {
         <Route path="/admin" element={<AdminSignIn />} />
         <Route element={<AdminHomePrivateRoute />}>
           <Route path="/admin/home" element={<AdminHome />} />
-        </Route>
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        </Route>
       </Routes>
     </>
   );
