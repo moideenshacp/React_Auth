@@ -19,6 +19,7 @@ const AdminDashboard = () => {
   });
   const fileRef = useRef(null);
   const [image, setImage] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchUsers = async () => {
     try {
@@ -130,6 +131,15 @@ const AdminDashboard = () => {
       }
     }
   };
+
+  const filteredUsers = users.filter((user) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      user.username.toLowerCase().includes(query) ||
+      user.email.toLowerCase().includes(query)
+    );
+  });
+
   return (
     <div className="container mx-auto p-8">
       <ToastContainer />
@@ -137,6 +147,13 @@ const AdminDashboard = () => {
         <h1 className="text-2xl font-bold text-center">
           Admin Dashboard - Users
         </h1>
+        <input
+            type="text"
+            placeholder="Search Users..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="border border-gray-300 px-4 py-2 rounded-lg mr-4"
+          />
         <button
           onClick={handleAddUser}
           className="bg-green-500 text-white font-semibold py-2 px-4 rounded-lg flex items-center hover:bg-green-600 transition duration-300"
@@ -157,35 +174,43 @@ const AdminDashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user, index) => (
-            <tr key={user._id} className="border-b">
-              <td className="py-3 px-6">{index + 1}</td>
-              <td className="py-3 px-6">
-                <img
-                  src={user.profilePicture}
-                  alt={`${user.username}'s profile`}
-                  className="h-10 w-10 rounded-full object-cover"
-                />
-              </td>
-              <td className="py-3 px-6">{user.username}</td>
-              <td className="py-3 px-6">{user.email}</td>
-              <td className="py-3 px-6 text-center">
-                <button
-                  onClick={() => handleEdit(user)}
-                  className="text-blue-500 hover:text-blue-700 mr-3"
-                >
-                  <PencilSquareIcon className="h-5 w-5 inline-block" />
-                </button>
-                <button
-                  onClick={() => handleDelete(user._id)}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  <TrashIcon className="h-5 w-5 inline-block" />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+      {filteredUsers.length > 0 ? (
+        filteredUsers.map((user, index) => (
+          <tr key={user._id} className="border-b">
+            <td className="py-3 px-6">{index + 1}</td>
+            <td className="py-3 px-6">
+              <img
+                src={user.profilePicture}
+                alt={`${user.username}'s profile`}
+                className="h-10 w-10 rounded-full object-cover"
+              />
+            </td>
+            <td className="py-3 px-6">{user.username}</td>
+            <td className="py-3 px-6">{user.email}</td>
+            <td className="py-3 px-6 text-center">
+              <button
+                onClick={() => handleEdit(user)}
+                className="text-blue-500 hover:text-blue-700 mr-3"
+              >
+                <PencilSquareIcon className="h-5 w-5 inline-block" />
+              </button>
+              <button
+                onClick={() => handleDelete(user._id)}
+                className="text-red-500 hover:text-red-700"
+              >
+                <TrashIcon className="h-5 w-5 inline-block" />
+              </button>
+            </td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan="5" className="text-center py-4">
+            No users found.
+          </td>
+        </tr>
+      )}
+    </tbody>
       </table>
 
       {isEditModalOpen && (
